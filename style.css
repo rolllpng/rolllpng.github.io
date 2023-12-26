@@ -124,6 +124,7 @@ nav .fa-solid{
     margin: auto;
     text-align: center;
     padding-top: 25px;
+    background-color: rgb(31, 31, 31);
 }
 h1{
     font-size: 36px;
@@ -131,7 +132,7 @@ h1{
 }
 
 p{
-    color: black;
+    color: white;
     font-size: 14px;
     font-weight: 500;
     line-height: 22px;
