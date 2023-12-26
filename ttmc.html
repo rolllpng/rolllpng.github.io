@@ -6,34 +6,72 @@
     <title>Morse Code Translator</title>
     <link rel="stylesheet" href="stylettmc.css">
     <script>
-        function textToMorse() {
-            const inputText = document.getElementById('inputText').value.toLowerCase();
-            const morseCode = translateToMorse(inputText);
-            document.getElementById('outputMorse').value = morseCode;
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            function translate() {
+                const inputOutput = document.getElementById('inputOutput');
+                const outputText = document.getElementById('outputText');
+                const inputValue = inputOutput.value.trim();
 
+                if (document.getElementById('textToMorse').checked) {
+                    outputText.value = textToMorse(inputValue);
+                } else {
+                    outputText.value = morseToText(inputValue);
+                }
+            }
 
-        function translateToMorse(text) {
-            const morseCodeMap = {
-                'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....',
-                'i': '..', 'j': '.---', 'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.',
-                'q': '--.-', 'r': '.-.', 's': '...', 't': '-', 'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-',
-                'y': '-.--', 'z': '--..', '1': '.----', '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.', '0': '-----', ' ': '/'
-            };
+            function textToMorse(text) {
+                const morseCodeMap = {
+                    'a': '.-', 'b': '-...', 'c': '-.-.', 'd': '-..', 'e': '.', 'f': '..-.', 'g': '--.', 'h': '....',
+                    'i': '..', 'j': '.---', 'k': '-.-', 'l': '.-..', 'm': '--', 'n': '-.', 'o': '---', 'p': '.--.',
+                    'q': '--.-', 'r': '.-.', 's': '...', 't': '-', 'u': '..-', 'v': '...-', 'w': '.--', 'x': '-..-',
+                    'y': '-.--', 'z': '--..', '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+                    '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.', ' ': '/'
+                };
 
+                return text.toLowerCase().split('').map(char => morseCodeMap[char] || char).join(' ');
+            }
 
-            return text.split('').map(char => morseCodeMap[char] || char).join(' ');
-        }
+            function morseToText(morseCode) {
+                const morseTextMap = {
+                    '.-': 'a', '-...': 'b', '-.-.': 'c', '-..': 'd', '.': 'e', '..-.': 'f', '--.': 'g', '....': 'h',
+                    '..': 'i', '.---': 'j', '-.-': 'k', '.-..': 'l', '--': 'm', '-.': 'n', '---': 'o', '.--.': 'p',
+                    '--.-': 'q', '.-.': 'r', '...': 's', '-': 't', '..-': 'u', '...-': 'v', '.--': 'w', '-..-': 'x',
+                    '-.--': 'y', '--..': 'z', '-----': '0', '.----': '1', '..---': '2', '...--': '3', '....-': '4',
+                    '.....': '5', '-....': '6', '--...': '7', '---..': '8', '----.': '9', '/': ' '
+                };
+
+                return morseCode.split(' ').map(code => morseTextMap[code] || code).join('');
+            }
+
+            document.getElementById('translateButton').addEventListener('click', translate);
+        });
     </script>
 </head>
 <body>
     <h1>Morse Code Translator</h1>
-    <label for="inputText">Enter Text:</label>
-    <textarea id="inputText" rows="4" cols="50"></textarea>
-    <br>
-    <button onclick="textToMorse()">Translate to Morse</button>
-    <br>
-    <label for="outputMorse">Morse Code:</label>
-    <textarea id="outputMorse" rows="4" cols="50" readonly></textarea>
+
+    <label>
+        <input type="radio" name="translationMode" id="textToMorse" checked>
+        Text to Morse
+    </label>
+
+    <label>
+        <input type="radio" name="translationMode" id="morseToText">
+        Morse to Text
+    </label>
+
+    <br><br>
+
+    <label for="inputOutput">Enter text or Morse code:</label>
+    <textarea id="inputOutput" rows="4" cols="50"></textarea>
+
+    <br><br>
+
+    <button type="button" id="translateButton">Translate</button>
+
+    <br><br>
+
+    <label for="outputText">Output:</label>
+    <textarea id="outputText" rows="4" cols="50" readonly></textarea>
 </body>
 </html>
