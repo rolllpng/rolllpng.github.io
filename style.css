@@ -127,6 +127,7 @@ nav .fa-solid{
     background-color: rgb(31, 31, 31);
 }
 h1{
+    color: white;
     font-size: 36px;
     font-weight: 600;
 }
@@ -136,6 +137,8 @@ p{
     font-size: 14px;
     font-weight: 500;
     line-height: 22px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .row{
@@ -145,20 +148,25 @@ p{
 
 .wit-col{
     flex-basis: 31%;
-    background-color: rgb(182, 182, 182);
+    background-color: rgb(14, 14, 14);
     border-radius: 10px;
-    margin: 5%;
+    margin: 2.5%;
+    margin-top: 1%;
+    margin-bottom: 2.5%;
+    margin-left: 2%;
+    margin-right: 2%;
     padding: 20px 12px;
     box-sizing: border-box;
     transition: 0.5s;
 }
 h3{
+    color: white;
     text-align: center;
     font-weight: 600;
     margin: 10px 0;
 }
 .wit-col:hover{
-    box-shadow: 0 0 20px 0px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px 0px rgba(255, 255, 255, 0.5);
 }
 
 @media(max-width: 700px){
