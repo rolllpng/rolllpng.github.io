@@ -261,6 +261,7 @@ h3{
     justify-content:center;
     align-items:start;
     box-shadow: 0 0 20px 0px rgb(0, 0, 0);
+    border-radius: 30px;
 }
 .rodarheader a{
     margin-left: 100px;
