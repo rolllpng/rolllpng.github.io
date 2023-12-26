@@ -267,6 +267,7 @@ h3{
     background-size:cover;
     justify-content:center;
     align-items:start;
+    box-shadow: 0 0 20px 0px rgb(0, 0, 0);
 }
 .rodarheader a{
     margin-left: 100px;
@@ -287,4 +288,5 @@ h3{
     background: white;
     color: black;
     border: 10px solid black;
+    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.5);
 }
