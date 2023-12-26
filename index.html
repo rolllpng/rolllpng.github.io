@@ -18,8 +18,8 @@
                 <i class="fa-solid fa-xmark" onclick="hideMenu()"></i>
                 <ul>
                     <li><a href="">HOME</a></li>
-                    <li><a href="#section-wit">WHAT IS THIS</a></li>
-                    <li><a href="">WHAT AM I</a></li>
+                    <li><a href="#whatisthis">WHAT IS THIS</a></li>
+                    <li><a href="#rodar">RODAR BOT</a></li>
                     <li><a href="">PEOPLE I KNOW</a></li>
                     <li><a href="">SEX</a></li>
                     <li><a href="">BALLS</a></li>
@@ -39,14 +39,8 @@
 
     <!---whatisthis--->
 
-    <section class="wit">
+    <section class="wit" id="whatisthis">
         <h1>What is this?</h1>
-        <p>this is literally just a random website i made to waste my time trying to do something so i have better chances at a future with a job that won't dissapoint everyone 
-            and will make me more than 5 bucks a day. now im going to add that placeholder text to make it seem fuller than it is. Lorem ipsum dolor sit amet, consectetur 
-            adipisicing elit. Mollitia quam error, laborum corporis in libero facere ullam consequatur? Neque quibusdam aperiam sit distinctio cupiditate autem tempora delectus 
-            ullam fuga earum rerum id aut, illo repellendus perferendis suscipit. Eos, fugit nesciunt nisi itaque eius ex quibusdam dignissimos esse provident repellendus 
-            necessitatibus.</p>
-
             <div class="row">
                 <div class="wit-col">
                     <h3>Why?</h3>
@@ -69,6 +63,40 @@
                 </div>
             </div>
     </section>
+    
+    <!------rodar bot------>
+
+    <section class="rb" id="rodar">
+        <div class="intro">
+        <h1>Rodar</h1>
+        <h2>What is Rodar?</h2>
+        <p>Rodar is a Discord Bot with currency commands such as a shop, user inventory and much more!</p>
+        <div class="botimages">
+            <img src="images/botbeingusedbyahappycustomer.png" alt="Bot's Shop Command">
+            <img src="images/talkchar.png" alt="Bot's Talkchar Command">
+            <img src="images/coolguessinggame.png" alt="Guessing Game Command">
+            <img src="images/sobbingrn.png" alt="Bot's Help Command ">
+        </div>
+        <h2>Stuff you can do:</h2>
+        <div class="commands">
+            <div class="cmd-col">
+                <h3>Talkchar</h3>
+                <p>Talk as any character you want by setting a name and profile picture, or use one of the bot's presets!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Shop</h3>
+                <p>Buy items from the shop with money and use those items to make even more money!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Games</h3>
+                <p>Play a guessing game with '/currency play guess' to earn robcoins! More games coming soon!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Insert This Code For 100 Robcoins</h3>
+                <p>Use the command /code and insert the code "website" for 100 robcoins!</p>
+            </div>
+        </div>
+    </section>
 
     <!------JavaScript for Toggle Menu------>
 <script>
@@ -76,10 +104,12 @@
     var navLinks = document.getElementById("navLinks");
 
     function showMenu(){
+        navLinks.style.display = "flex"
         navLinks.style.right = "0";
     }
     function hideMenu(){
         navLinks.style.right = "-200px";
+        navLinks.style.display = "none"
     }
 
 </script>
