@@ -122,7 +122,12 @@ function displayData(title, data, containerId) {
 
 // ... (existing code)
 
-// Call the fetchTopData function when the access token is available
 window.addEventListener('load', async () => {
     const params = getHashParams();
-    const accessToken = params.access
+    const accessToken = params.access_token;
+
+    if (accessToken) {
+        await fetchTopData(accessToken);
+    }
+});
+    
