@@ -1,5 +1,5 @@
 const clientId = '42d3994c26fb4a00b16609a33f09bedd';
-const redirectUri = 'https://rolllpng.github.io/spotify';
+const redirectUri = 'https://rolllpng.github.io/spotify/callback';
 const scope = 'user-top-read';
 let accessToken;
 
