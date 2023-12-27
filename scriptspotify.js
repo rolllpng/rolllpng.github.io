@@ -148,3 +148,46 @@ window.addEventListener('load', async () => {
 });
 
 // ... (existing code)
+
+
+// ... (existing code)
+
+// Function to fetch user's top artists with profile pictures
+async function fetchTopArtistsWithPictures(accessToken) {
+    const url = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=5';
+
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    const data = await response.json();
+    return data.items.map(artist => ({
+        name: artist.name,
+        image: artist.images.length > 0 ? artist.images[0].url : null
+    }));
+}
+
+// Function to display data on the page with artist profile pictures
+function displayDataWithPictures(title, data, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = `<h2>${title}</h2><ul>${data.map(item => `
+        <li>
+            <img src="${item.image}" alt="Artist Profile Picture" style="width: 50px; height: 50px; margin-right: 10px;">
+            <strong>${item.name}</strong>
+        </li>`).join('')}</ul>`;
+}
+
+// Call the fetchTopArtistsWithPictures function when the access token is available
+window.addEventListener('load', async () => {
+    const params = getHashParams();
+    const accessToken = params.access_token;
+
+    if (accessToken) {
+        const topArtistsWithPictures = await fetchTopArtistsWithPictures(accessToken);
+        displayDataWithPictures('Top Artists:', topArtistsWithPictures, 'top-artists');
+    }
+});
+
+// ... (existing code)
