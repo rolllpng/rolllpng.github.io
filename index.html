@@ -1,141 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Styled Calculator</title>
-  <style>
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #121212; /* Dark background color */
-      color: #fff; /* Light text color */
-      transition: background-color 0.3s, color 0.3s; /* Transition effect for smooth mode change */
-    }
-    
-    #calculator {
-      width: 300px;
-      background-color: #1e1e1e; /* Darker background color */
-      border: 2px solid #333;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow color */
-      overflow: hidden;
-      margin-top: 50px;
-    }
-    
-    #display {
-      width: calc(100% - 2 * 15px);
-      margin: 15px;
-      padding: 15px;
-      font-size: 20px;
-      text-align: right;
-      border: none;
-      outline: none;
-      background-color: #2b2b2b; /* Darker background color */
-      border-radius: 4px;
-      color: #fff; /* Light text color */
-      box-sizing: border-box; /* Ensure padding and border are included in the total width */
-    }
-    
-    button {
-      width: 25%;
-      padding: 15px;
-      font-size: 16px;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      background-color: #333; /* Darker button color */
-      transition: background-color 0.3s;
-      color: #fff; /* Light text color */
-    }
-    
-    button:hover {
-      background-color: #444; /* Darker hover color */
-    }
-    
-    #row1, #row2, #row3, #row4, #row5 {
-      display: flex;
-    }
-    
-    #row1 button, #row2 button, #row3 button, #row4 button, #row5 button {
-      flex: 1;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolls Site</title>
+    <link rel="icon" type="image/x-icon" href="images/power.ico">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/d89f93068d.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <section class="header">
+        <nav>
+            <a href="./index"><img src="images/power.jpg"></a>
+            <div class="nav-links" id="navLinks">
+                <i class="fa-solid fa-xmark" onclick="hideMenu()"></i>
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li><a href="#whatisthis">What Is This</a></li>
+                    <li><a href="#rodar">Rodar Bot</a></li>
+                    <li><a href="./ttmc">Text To Morse Code</a></li>
+                    <li><a href="./calculator">Simple Online Calculator</a></li>
+                    <li><a href="./clock">Simple Online Calculator</a></li>
+                </ul>
+            </div>
+            <i class="fa-solid fa-bars" onclick="showMenu()"></i>
+        </nav>
 
-<div id="calculator">
-  <input type="text" id="display" readonly>
-  <div id="row1">
-    <button onclick="clearEntry()">CE</button>
-    <button onclick="clearLastDigit()">C</button>
-    <button onclick="appendToDisplay('/')">/</button>
-  </div>
-  <div id="row2">
-    <button onclick="appendToDisplay('7')">7</button>
-    <button onclick="appendToDisplay('8')">8</button>
-    <button onclick="appendToDisplay('9')">9</button>
-    <button onclick="appendToDisplay('*')">*</button>
-  </div>
-  <div id="row3">
-    <button onclick="appendToDisplay('4')">4</button>
-    <button onclick="appendToDisplay('5')">5</button>
-    <button onclick="appendToDisplay('6')">6</button>
-    <button onclick="appendToDisplay('-')">-</button>
-  </div>
-  <div id="row4">
-    <button onclick="appendToDisplay('1')">1</button>
-    <button onclick="appendToDisplay('2')">2</button>
-    <button onclick="appendToDisplay('3')">3</button>
-    <button onclick="appendToDisplay('+')">+</button>
-  </div>
-  <div id="row5">
-    <button onclick="appendToDisplay('0')">0</button>
-    <button onclick="appendToDisplay('.')">.</button>
-    <button onclick="calculateResult()">=</button>
-  </div>
-</div>
+        <div class="text-box">
+            <h1>
+                Roll's Website
+            </h1>
+            <p>i was really bored so i started learning html to waste some time and do silly stuff bleh</p>
+            <a href="" class="hero-btn">thing that currently doesnt work but i gotta go sleep</a>
+        </div>
+    </section>
 
+    <!---whatisthis--->
+
+    <section class="wit" id="whatisthis">
+        <h1>What is this?</h1>
+            <div class="row">
+                <div class="wit-col">
+                    <h3>Me</h3>
+                    <p>hello!!!!! im roll and i like coding, playing videogames and doing silly stuff
+                    </p>
+                </div>
+                <div class="wit-col">
+                    <h3>This Website</h3>
+                    <p>
+                        this is a website where im going to store the projects i work on to give info on it and links to stuff
+                    </p>
+                </div>
+                <div class="wit-col">
+                    <h3>More Random Info</h3>
+                    <p>
+                        this was also just to learn how to make websites so i have better chances at a future with a job that pays more than 5 euros per hour
+                    </p>
+                </div>
+            </div>
+    </section>
+    
+    <!------rodar bot------>
+
+    <section class="rb" id="rodar">
+        <div class="intro">
+        <h1>Rodar</h1>
+        <h2>What is Rodar?</h2>
+        <p>Rodar is a Discord Bot with currency commands such as a shop, user inventory and much more!</p>
+        <div class="botimages">
+            <img src="images/botbeingusedbyahappycustomer.png" alt="Bot's Shop Command">
+            <img src="images/talkchar.png" alt="Bot's Talkchar Command">
+            <img src="images/coolguessinggame.png" alt="Guessing Game Command">
+            <img src="images/sobbingrn.png" alt="Bot's Help Command ">
+        </div>
+        <h2>Stuff you can do:</h2>
+        <div class="commands">
+            <div class="cmd-col">
+                <h3>Talkchar</h3>
+                <p>Talk as any character you want by setting a name and profile picture, or use one of the bot's presets!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Shop</h3>
+                <p>Buy items from the shop with money and use those items to make even more money!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Games</h3>
+                <p>Play a guessing game with '/currency play guess' to earn robcoins! More games coming soon!</p>
+            </div>
+            <div class="cmd-col">
+                <h3>Insert This Code For 100 Robcoins</h3>
+                <p>Use the command /code and insert the code "website" for 100 robcoins!</p>
+            </div>
+        </div>
+        <div class="rodarheader">
+            <h2 id="rht">Add Rodar to your server now!</h2>
+            <p id="rht">If this convinced you (hopefully), you can add your Discord Bot with the button below!</p>
+            <a href="https://discord.com/api/oauth2/authorize?client_id=1178748710461640754&permissions=8&scope=bot">Click Here to Add The Bot</a>
+        </div>
+    </section>
+
+    <!------JavaScript for Toggle Menu------>
 <script>
-  function appendToDisplay(value) {
-    const display = document.getElementById('display');
-    const lastChar = display.value.charAt(display.value.length - 1);
 
-    // If the last character is an operator and the new value is also an operator, replace the last one
-    if (['/', '*', '-', '+'].includes(lastChar) && ['/', '*', '-', '+'].includes(value)) {
-      display.value = display.value.slice(0, -1) + value;
-    } else {
-      // Append the value to the display
-      display.value += value;
+    var navLinks = document.getElementById("navLinks");
+
+    function showMenu(){
+        navLinks.style.display = "flex"
+        navLinks.style.right = "0";
     }
-  }
-
-  function clearEntry() {
-    document.getElementById('display').value = '';
-  }
-
-  function clearLastDigit() {
-    const display = document.getElementById('display');
-    display.value = display.value.slice(0, -1);
-  }
-
-  function calculateResult() {
-    const expression = document.getElementById('display').value;
-    try {
-      const result = eval(expression);
-      if (result === Infinity || isNaN(result)) {
-        document.getElementById('display').value = 'Error';
-      } else {
-        document.getElementById('display').value = result;
-      }
-    } catch (error) {
-      document.getElementById('display').value = 'Error';
+    function hideMenu(){
+        navLinks.style.right = "-200px";
+        navLinks.style.display = "none"
     }
-  }
+
 </script>
 
 </body>

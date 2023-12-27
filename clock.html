@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time in Your Timezone</title>
+    <style>
+        *{
+            font-family: 'Open Sans', sans-serif;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        #time {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #555;
+        }
+
+        #timezone {
+            color: #777;
+        }
+
+        .dark-mode {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .dark-theme {
+            background-color: #1a1a1a;
+        }
+
+        .dark-theme h1,
+        .dark-theme #time,
+        .dark-theme #timezone,
+        .dark-theme .dark-mode {
+            color: #fff;
+        }
+    </style>
+    <script>
+        function displayTime() {
+            const userDate = new Date();
+            const hours = userDate.getHours().toString().padStart(2, '0');
+            const minutes = userDate.getMinutes().toString().padStart(2, '0');
+            const seconds = userDate.getSeconds().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            document.getElementById('time').innerText = `Current Time: ${timeString}`;
+            document.getElementById('timezone').innerText = `Your Timezone: ${timeZone}`;
+        }
+
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-theme');
+
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const isDarkMode = body.classList.contains('dark-theme');
+
+            darkModeToggle.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            darkModeToggle.innerHTML = isDarkMode ? '&#127774; Light Mode' : '&#127769; Dark Mode';
+        }
+
+        window.onload = function() {
+            displayTime();
+            setInterval(displayTime, 1000);
+
+            // Add event listener for dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Time in Your Timezone</h1>
+        <p id="time"></p>
+        <p id="timezone"></p>
+    </div>
+    <div id="dark-mode-toggle" class="dark-mode">&#127769; Dark Mode</div>
+</body>
+</html>
