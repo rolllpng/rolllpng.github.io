@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASCII Art Generator</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #ddd;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+    }
+
+    #ascii-container {
+      margin: 20px auto;
+      max-width: 80%;
+      overflow: hidden;
+    }
+
+    #ascii-output {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      white-space: pre;
+      overflow: auto;
+    }
+
+    #image-input {
+      margin: 20px;
+      display: none;
+    }
+
+    #clear-button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #333;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #clear-button:hover {
+      background-color: #555;
+    }
+
+    #size-slider {
+      margin-top: 20px;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <h1>ASCII Art Generator</h1>
+  <label for="image-input" style="cursor: pointer;">Upload Image</label>
+  <input type="file" id="image-input" accept="image/*" style="display: none;">
+  <div id="ascii-container">
+    <div id="ascii-output"></div>
+  </div>
+  <input type="range" id="size-slider" min="5" max="200" value="40">
+  <button id="clear-button">Clear and Input Another Image</button>
+
+  <script>
+    document.getElementById('clear-button').addEventListener('click', function() {
+      document.getElementById('image-input').value = '';
+      document.getElementById('ascii-output').innerText = '';
+    });
+
+    document.getElementById('image-input').addEventListener('change', function() {
+      const fileInput = this;
+      const asciiOutput = document.getElementById('ascii-output');
+      const sizeSlider = document.getElementById('size-slider');
+
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const image = new Image();
+          image.src = e.target.result;
+          image.onload = function() {
+            const asciiArt = generateAsciiArt(image, parseInt(sizeSlider.value, 10));
+            asciiOutput.innerText = asciiArt;
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('size-slider').addEventListener('input', function() {
+      const sizeSlider = this;
+      const asciiOutput = document.getElementById('ascii-output');
+      const imageInput = document.getElementById('image-input');
+
+      if (imageInput.files.length > 0) {
+        const file = imageInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const image = new Image();
+          image.src = e.target.result;
+          image.onload = function() {
+            const asciiArt = generateAsciiArt(image, parseInt(sizeSlider.value, 10));
+            asciiOutput.innerText = asciiArt;
+          };
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function generateAsciiArt(image, textDensity) {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      // Maintain the aspect ratio of the original image
+      const aspectRatio = image.width / image.height;
+      const maxWidth = 800; // Set a maximum width for display
+      const maxHeight = maxWidth / aspectRatio;
+
+      if (aspectRatio > 1) {
+        canvas.width = Math.min(image.width, maxWidth);
+        canvas.height = canvas.width / aspectRatio;
+      } else {
+        canvas.height = Math.min(image.height, maxHeight);
+        canvas.width = canvas.height * aspectRatio;
+      }
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      let asciiArt = '';
+      for (let y = 0; y < canvas.height; y += textDensity) {
+        for (let x = 0; x < canvas.width; x += textDensity) {
+          const pixel = context.getImageData(x, y, 1, 1).data;
+          const brightness = (pixel[0] + pixel[1] + pixel[2]) / 3;
+          const asciiChar = getAsciiChar(brightness);
+          asciiArt += asciiChar;
+        }
+        asciiArt += '\n';
+      }
+
+      return asciiArt;
+    }
+
+    function getAsciiChar(brightness) {
+      const asciiChars = '@%#*+=-:. ';
+      const charIndex = Math.floor((brightness / 255) * (asciiChars.length - 1));
+      return asciiChars.charAt(charIndex);
+    }
+  </script>
+</body>
+</html>
