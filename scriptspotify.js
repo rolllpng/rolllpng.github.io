@@ -191,3 +191,14 @@ window.addEventListener('load', async () => {
 });
 
 // ... (existing code)
+
+window.addEventListener('load', async () => {
+    const params = getHashParams();
+    const accessToken = params.access_token;
+
+    if (accessToken) {
+        const topArtistsWithPictures = await fetchTopArtistsWithPictures(accessToken);
+        console.log(topArtistsWithPictures); // Log the data to the console
+        displayDataWithPictures('Top Artists:', topArtistsWithPictures, 'top-artists');
+    }
+});
