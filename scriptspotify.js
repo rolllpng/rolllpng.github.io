@@ -202,3 +202,56 @@ window.addEventListener('load', async () => {
         displayDataWithPictures('Top Artists:', topArtistsWithPictures, 'top-artists');
     }
 });
+
+// ... (existing code)
+
+// Function to fetch user's top artists with profile pictures
+async function fetchTopArtistsWithPictures(accessToken) {
+    const url = 'https://api.spotify.com/v1/me/top/artists?time_range=short_term&limit=5';
+
+    const response = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    const data = await response.json();
+    return data.items.map(async artist => {
+        const artistData = {
+            name: artist.name,
+            images: artist.images
+        };
+
+        if (artistData.images.length > 0) {
+            artistData.image = artistData.images[0].url;
+        } else {
+            // Use a placeholder image if the artist has no profile picture
+            artistData.image = 'https://via.placeholder.com/50'; // Update the URL as needed
+        }
+
+        return artistData;
+    });
+}
+
+// Function to display data on the page with artist profile pictures
+async function displayDataWithPictures(title, data, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = `<h2>${title}</h2><ul>${(await Promise.all(data)).map(item => `
+        <li>
+            <img src="${item.image}" alt="Artist Profile Picture" style="width: 50px; height: 50px; margin-right: 10px;">
+            <strong>${item.name}</strong>
+        </li>`).join('')}</ul>`;
+}
+
+// Call the fetchTopArtistsWithPictures function when the access token is available
+window.addEventListener('load', async () => {
+    const params = getHashParams();
+    const accessToken = params.access_token;
+
+    if (accessToken) {
+        const topArtistsWithPictures = await fetchTopArtistsWithPictures(accessToken);
+        displayDataWithPictures('Top Artists:', topArtistsWithPictures, 'top-artists');
+    }
+});
+
+// ... (existing code)
