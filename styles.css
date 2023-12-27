@@ -1,0 +1,39 @@
+body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 50px;
+    background-color: #333; /* Set a dark background color */
+    color: #fff; /* Set light text color */
+}
+
+.quote-container {
+    max-width: 600px;
+    margin: auto;
+    border: 1px solid #555; /* Darker border color */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #444; /* Slightly darker background color */
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+/* Adjustments for dark mode */
+button:hover {
+    background-color: #45a049; /* Darken the color on hover */
+}
+
+/* Add a media query for responsiveness */
+@media (max-width: 768px) {
+    .quote-container {
+        width: 80%; /* Adjust width for smaller screens */
+    }
+}
