@@ -83,6 +83,7 @@ window.addEventListener('load', async () => {
     const accessToken = params.access_token;
 
     if (accessToken) {
+        // If access token is present, fetch and display top data
         await fetchTopData(accessToken);
     }
 });
