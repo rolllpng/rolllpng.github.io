@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live HTML Editor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="editor-container">
+        <div class="editor">
+            <textarea id="html-input" placeholder="Write your HTML code here..."></textarea>
+            <button onclick="runCode()">Run Code</button>
+        </div>
+        <iframe id="result-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" frameborder="0"></iframe>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

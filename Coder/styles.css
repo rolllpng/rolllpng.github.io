@@ -1,0 +1,48 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e1e; /* Dark background color */
+    color: #fff; /* Light text color */
+}
+
+.editor-container {
+    display: flex;
+    height: 100vh;
+}
+
+.editor {
+    flex: 1;
+    padding: 20px;
+    background-color: #2d2d2d; /* Darker editor background color */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    flex: 1;
+    resize: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #333; /* Dark textarea background color */
+    color: #fff; /* Light text color in textarea */
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#result-frame {
+    flex: 1;
+    border: none;
+    background-color: #fff; /* White background color for the result frame */
+}
