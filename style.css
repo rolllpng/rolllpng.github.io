@@ -333,7 +333,6 @@ h3{
     padding-bottom: 30px;
 }
 .stats p a{
-    margin-left: 100px;
     color: #1db954;
     display: inline-block;
     font-size: 50px;
@@ -342,7 +341,6 @@ h3{
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
-    color: #1db954;
     border: 1px solid #1db954;
     margin-top: 30px;
     padding: 32px 30px;
@@ -358,4 +356,57 @@ h3{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/*More Stuff*/
+
+.ots{
+    background-color: #0a060f;
+    padding: 100px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+.ots h1{
+    text-align: center;
+}
+.ots p{
+    text-align: center;
+    font-size: 30px;
+}
+.otsl{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.otsl p a{
+    color: #8768ad;
+    font-size: 30px;
+    font-weight: bold;
+    background: transparent;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    border: 3px solid #392257;
+    padding: 32px 30px;
+    transition: 0.3s;
+    border-radius: 10px;
+}
+.otsl p a:hover{
+    background: #392257;
+    color: #ffffff;
+    box-shadow: 0 0 20px 0px rgb(0, 0, 0);
+}
+.otsli{
+    display: inline-block;
+    background-color: #170d24;
+    padding: 30px 20px;
+    border-radius: 20px;
+    outline: #392257;
+    outline-width: 5px;
+    outline-style: solid;
+    box-shadow: 0 0 20px 0px rgb(39, 39, 39);
 }
