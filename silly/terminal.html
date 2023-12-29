@@ -216,6 +216,14 @@ mplayer: {
     description: 'Play a video in the terminal',
     execute: (args) => playVideo(args),
 },
+encrypt: {
+    description: 'Encrypt a message',
+    execute: (args) => encryptMessage(args),
+},
+decrypt: {
+    description: 'Decrypt a message',
+    execute: (args) => decryptMessage(args),
+},
       // Add more commands here
     };
 
@@ -227,6 +235,20 @@ mplayer: {
         addToOutput(`${command}: ${commands[command].description}`);
       }
     }
+    
+    function encryptMessage(args) {
+    const message = args.join(' ');
+    const encryptedMessage = btoa(message); // Base64 encoding as a simple form of "encryption"
+    addToOutput(`Encrypted Message: ${encryptedMessage}`);
+    updatePrompt();
+}
+
+function decryptMessage(args) {
+    const encryptedMessage = args.join(' ');
+    const decryptedMessage = atob(encryptedMessage); // Base64 decoding
+    addToOutput(`Decrypted Message: ${decryptedMessage}`);
+    updatePrompt();
+}
 
     function viewImage(args) {
     if (args.length === 1) {
