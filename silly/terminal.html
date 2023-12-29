@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal Emulator</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #000;
+      color: #00ff00;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    #terminal {
+      width: 600px;
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #00ff00;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    input {
+      font-size: 16px;
+      line-height: 1.4;
+      color: #00ff00;
+      border: none;
+      background-color: #000;
+      outline: none;
+      width: calc(100% - 2px);
+    }
+    #prompt {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Style for the scrollbar */
+    #terminal::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    /* Handle on hover */
+    #terminal::-webkit-scrollbar-thumb:hover {
+      background: currentColor; /* Green */
+    }
+
+    /* Handle on active */
+    #terminal::-webkit-scrollbar-thumb:active {
+      background: currentColor; /* Darker Green */
+    }
+
+    /* Handle */
+    #terminal::-webkit-scrollbar-thumb {
+      background: currentColor; /* Light Green */
+      border-radius: 0; /* Rectangle shape */
+    }
+
+    /* Track */
+    #terminal::-webkit-scrollbar-track {
+      background: #000000;
+    }
+
+    /* Corner */
+    #terminal::-webkit-scrollbar-corner {
+      background: #000;
+    }
+
+    button {
+    margin-right: 5px;
+    }
+
+    /* Style for afplay buttons */
+#terminal button {
+    background-color: #00ff00;
+    color: #000;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    margin-right: 5px;
+    transition: background-color 0.3s;
+}
+
+#terminal button:hover {
+    background-color: #008000; /* Darker green on hover */
+}
+
+/* Shorter progress bar */
+#terminal progress {
+    height: 15px; /* Adjust the height as needed */
+    width: 400px;
+    margin-top: 8px;
+    background: #00ff00; /* Green color */
+    border: 1px solid #00ff00; /* Set border to match background color */
+}
+
+  </style>
+</head>
+<body>
+  <div id="terminal">
+    <pre>Welcome to the Terminal Emulator</pre>
+    <pre id="output"></pre>
+    <div id="prompt">&gt; <input id="input" autocomplete="off" spellcheck="false"></div>
+    <div id="youtube-player"></div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const outputElement = document.getElementById('output');
+    const inputElement = document.getElementById('input');
+    const promptElement = document.getElementById('prompt');
+    const commands = {
+      help: {
+        description: 'List available commands',
+        execute: () => showHelp(),
+      },
+      echo: {
+        description: 'Print a message',
+        execute: (args) => echo(args),
+      },
+      clear: {
+        description: 'Clear the terminal',
+        execute: () => clearTerminal(),
+      },
+      date: {
+        description: 'Display the current date and time',
+        execute: () => displayDate(),
+      },
+      ls: {
+        description: 'List files in the current directory',
+        execute: () => listFiles(),
+      },
+      pwd: {
+        description: 'Print the current working directory',
+        execute: () => printWorkingDirectory(),
+      },
+      touch: {
+        description: 'Create a new file',
+        execute: (args) => createFile(args),
+      },
+      edit: {
+        description: 'Edit a text file',
+        execute: (args) => editTextFile(args),
+      },
+      cat: {
+        description: 'Display the content of a text file',
+        execute: (args) => catTextFile(args),
+      },
+      rm: {
+        description: 'Remove a file',
+        execute: (args) => removeFile(args),
+      },
+      dlfoc: {
+        description: 'Download a file from the terminal',
+        execute: (args) => downloadFile(args),
+      },
+      search: {
+    description: 'Search the web using your default search engine',
+    execute: (args) => searchWeb(args),
+},
+cowsay: {
+    description: 'Display a message with a talking cow',
+    execute: (args) => cowsayMessage(args),
+},
+cmatrix: {
+    description: 'Display a Matrix-like animation',
+    execute: () => displayCmatrix(),
+},
+fortune: {
+    description: 'Display a random fortune',
+    execute: () => displayFortune(),
+},
+eightball: {
+    description: 'Ask the magic 8-ball a question',
+    execute: (args) => askMagic8Ball(args),
+},
+mysite: {
+    description: 'Open my website',
+    execute: () => openMySite(),
+},
+open: {
+    description: 'Open a specified link',
+    execute: (args) => openLink(args),
+},
+play: {
+    description: 'Play music from YouTube',
+    execute: (args) => playYouTubeAudio(args),
+},
+snake: {
+    description: 'Play a game of Snake (CAN BE BUGGY)',
+    execute: () => playSnakeGame(),
+},
+color: {
+    description: 'Change the terminals color',
+    execute: (args) => changeTerminalColors(args),
+},
+insert: {
+    description: 'Insert a file into the terminal',
+    execute: () => showFileInput(),
+},
+afplay: {
+    description: 'Play an audio file',
+    execute: (args) => playAudio(args),
+},
+feh: {
+    description: 'View an image in the terminal',
+    execute: (args) => viewImage(args),
+},
+mplayer: {
+    description: 'Play a video in the terminal',
+    execute: (args) => playVideo(args),
+},
+      // Add more commands here
+    };
+
+    const files = {};
+
+    function showHelp() {
+      addToOutput('Available commands:');
+      for (const command in commands) {
+        addToOutput(`${command}: ${commands[command].description}`);
+      }
+    }
+
+    function viewImage(args) {
+    if (args.length === 1) {
+        const fileName = args[0];
+        const fileContent = files[fileName];
+
+        if (fileContent !== undefined) {
+            const fileType = getFileType(fileName);
+
+            if (fileType === 'image') {
+                // Display the image with spacing
+                addToOutput(`Viewing image: ${fileName}<br>`);
+                addToOutput(`<img src="${fileContent}" style="max-width:100%; max-height:100%; margin-top: 10px;" />`);
+            } else {
+                addToOutput(`File '${fileName}' is not an image.`);
+            }
+        } else {
+            addToOutput(`File '${fileName}' not found.`);
+        }
+    } else {
+        addToOutput('Usage: feh <filename>');
+    }
+
+    updatePrompt();
+}
+
+function playVideo(args) {
+    if (args.length === 1) {
+        const fileName = args[0];
+        const fileContent = files[fileName];
+
+        if (fileContent !== undefined) {
+            const fileType = getFileType(fileName);
+
+            if (fileType === 'video') {
+                // Display the video with spacing
+                addToOutput(`Playing video: ${fileName}<br>`);
+                addToOutput(`<video controls style="max-width:100%; max-height:100%; margin-top: 10px;"><source src="${fileContent}" type="video/mp4"></video>`);
+            } else {
+                addToOutput(`File '${fileName}' is not a video.`);
+            }
+        } else {
+            addToOutput(`File '${fileName}' not found.`);
+        }
+    } else {
+        addToOutput('Usage: mplayer <filename>');
+    }
+
+    updatePrompt();
+}
+
+    function playAudio(args) {
+    if (args.length === 1) {
+        const fileName = args[0];
+        const fileContent = files[fileName];
+
+        if (fileContent !== undefined) {
+            const fileType = getFileType(fileName);
+
+            if (fileType === 'audio') {
+                const audioContainer = document.createElement('div');
+                audioContainer.style.marginTop = '10px';
+
+                const audio = new Audio(fileContent);
+
+                const playButton = createButton('Play', () => playAudioAction(audio));
+                const pauseButton = createButton('Pause', () => pauseAudioAction(audio));
+                const stopButton = createButton('Stop', () => stopAudioAction(audioContainer, audio));
+
+                const progressBar = document.createElement('progress');
+                progressBar.max = 100; // Set to 100 for percentage
+
+                progressBar.addEventListener('click', (e) => seekAudio(audio, e));
+
+                audio.addEventListener('timeupdate', () => {
+                    const value = (audio.currentTime / audio.duration) * 100;
+                    progressBar.value = isNaN(value) ? 0 : value;
+                });
+
+                audioContainer.appendChild(playButton);
+                audioContainer.appendChild(pauseButton);
+                audioContainer.appendChild(stopButton);
+                audioContainer.appendChild(progressBar);
+
+                addToOutput(`Audio player for '${fileName}':`);
+                addToOutput(audioContainer);
+
+                playAudioAction(audio);
+            } else {
+                addToOutput(`File '${fileName}' is not an audio file.`);
+            }
+        } else {
+            addToOutput(`File '${fileName}' not found.`);
+        }
+    } else {
+        addToOutput('Usage: afplay <filename>');
+    }
+}
+
+function seekAudio(audio, event) {
+    const percent = (event.clientX / event.target.offsetWidth) * 100;
+    audio.currentTime = (percent / 100) * audio.duration;
+}
+
+// ... (rest of the code remains unchanged)
+
+
+function seekAudio(audio, event) {
+    const percent = (event.clientX - event.target.getBoundingClientRect().left) / event.target.offsetWidth;
+    audio.currentTime = percent * audio.duration;
+}
+
+function playAudioAction(audio) {
+    audio.play();
+}
+
+function pauseAudioAction(audio) {
+    audio.pause();
+}
+
+function stopAudioAction(container, audio) {
+    audio.pause();
+    audio.currentTime = 0;
+    container.innerHTML = ''; // Clear the container content
+    addToOutput('Audio stopped.');
+    updatePrompt();
+}
+
+
+function createButton(label, action) {
+    const button = document.createElement('button');
+    button.textContent = label;
+    button.addEventListener('click', action);
+    return button;
+}
+
+
+
+    function showFileInput() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.txt, .mp3, .mp4, .png';
+    fileInput.addEventListener('change', handleFileUpload);
+    fileInput.click();
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        const fileName = file.name;
+        const fileType = getFileType(fileName);
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const fileContent = e.target.result;
+            files[fileName] = fileContent;
+            addToOutput(`File '${fileName}' inserted.`);
+            updatePrompt();
+        };
+
+        if (fileType === 'text') {
+            reader.readAsText(file);
+        } else if (fileType === 'audio' || fileType === 'video' || fileType === 'image') {
+            reader.readAsDataURL(file);
+        } else {
+            addToOutput('Unsupported file type. Only .txt, .mp3, .mp4, and .png are allowed.');
+            updatePrompt();
+        }
+    }
+}
+
+function getFileType(fileName) {
+    const extension = fileName.split('.').pop().toLowerCase();
+    if (extension === 'txt') {
+        return 'text';
+    } else if (['mp3', 'ogg', 'wav'].includes(extension)) {
+        return 'audio';
+    } else if (['mp4', 'webm'].includes(extension)) {
+        return 'video';
+    } else if (['png', 'jpg', 'jpeg', 'gif'].includes(extension)) {
+        return 'image';
+    } else {
+        return 'unsupported';
+    }
+}
+
+
+    let currentTextColor = '#00ff00'; // Default text color
+
+function changeTerminalColors(args) {
+    if (args.length === 1) {
+        const color = args[0];
+
+        // Change the text color
+        terminal.style.color = color;
+
+        // Change the typing prompt color
+        promptElement.style.color = color;
+
+        // Change the box outline color
+        terminal.style.borderColor = color;
+
+        // Update the current text color for dynamically applying to the typed text
+        currentTextColor = color;
+
+        addToOutput(`Terminal colors changed to ${color}`);
+    } else {
+        addToOutput('Usage: color <color>');
+    }
+}
+
+function updateInputTextColor() {
+    inputElement.style.color = currentTextColor;
+}
+
+inputElement.addEventListener('input', updateInputTextColor);
+
+    function playSnakeGame() {
+    clearTerminal();
+    addToOutput('Welcome to Snake! Use arrow keys to control the snake.');
+    addToOutput('Type "stop" to exit the game.');
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 300;
+    canvas.height = 300;
+    canvas.style.border = '1px solid #00ff00';
+    terminal.appendChild(canvas);
+
+    const snake = [{ x: 10, y: 10 }];
+    const gridSize = 20;
+    let direction = 'right';
+    let gameover = false; // Flag to track game over
+
+    function drawSnake() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff00';
+        for (const segment of snake) {
+            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+        }
+    }
+
+    function moveSnake() {
+        const head = { ...snake[0] };
+        switch (direction) {
+            case 'up':
+                head.y--;
+                break;
+            case 'down':
+                head.y++;
+                break;
+            case 'left':
+                head.x--;
+                break;
+            case 'right':
+                head.x++;
+                break;
+        }
+        snake.unshift(head);
+    }
+
+    function checkCollision() {
+        const head = snake[0];
+        if (head.x < 0 || head.x >= canvas.width / gridSize || head.y < 0 || head.y >= canvas.height / gridSize) {
+            return true; // Snake hit the wall
+        }
+        for (let i = 1; i < snake.length; i++) {
+            if (head.x === snake[i].x && head.y === snake[i].y) {
+                return true; // Snake collided with itself
+            }
+        }
+        return false;
+    }
+
+    function generateFood() {
+        const food = {
+            x: Math.floor(Math.random() * (canvas.width / gridSize)),
+            y: Math.floor(Math.random() * (canvas.height / gridSize)),
+        };
+        return food;
+    }
+
+    function drawFood(food) {
+        ctx.fillStyle = '#ff0000';
+        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    }
+
+    function updateGame() {
+        moveSnake();
+
+        if (checkCollision()) {
+            if (!gameover) {
+                addToOutput('Game Over! Type "stop" to exit.');
+                gameover = true;
+            }
+            document.removeEventListener('keydown', handleSnakeGameKeyPress);
+            return;
+        }
+
+        const head = snake[0];
+        if (head.x === food.x && head.y === food.y) {
+            food = generateFood();
+        } else {
+            snake.pop();
+        }
+
+        drawSnake();
+        drawFood(food);
+    }
+
+    let food = generateFood();
+    drawFood(food);
+
+    function handleSnakeGameKeyPress(e) {
+        switch (e.key) {
+            case 'ArrowUp':
+                direction = 'up';
+                break;
+            case 'ArrowDown':
+                direction = 'down';
+                break;
+            case 'ArrowLeft':
+                direction = 'left';
+                break;
+            case 'ArrowRight':
+                direction = 'right';
+                break;
+            case 'Escape':
+                if (!gameover) {
+                    addToOutput('Game Over! Type "stop" to exit.');
+                    gameover = true;
+                }
+                document.removeEventListener('keydown', handleSnakeGameKeyPress);
+                break;
+        }
+    }
+
+    document.addEventListener('keydown', handleSnakeGameKeyPress);
+
+    // Update the game every 200 milliseconds
+    const gameInterval = setInterval(updateGame, 200);
+
+    // Stop the game on command
+    function stopSnakeGame() {
+        clearInterval(gameInterval);
+        terminal.removeChild(canvas);
+        document.removeEventListener('keydown', handleSnakeGameKeyPress);
+        addToOutput('Snake game stopped. Type "help" for a list of commands.');
+        updatePrompt();
+    }
+
+    // Add stopSnakeGame to the commands object
+    commands.stop = { description: 'Stop the snake game or youtube video.', execute: stopSnakeGame};
+}
+
+
+    function echo(args) {
+      addToOutput(args.join(' '));
+    }
+
+    function searchWeb(args) {
+    if (args.length > 0) {
+        const query = args.join(' ');
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        window.open(searchUrl, '_blank');
+        addToOutput(`Searching the web for: ${query}`);
+    } else {
+        addToOutput('Usage: search <query>');
+    }
+}
+
+function openLink(args) {
+    if (args.length === 1) {
+        const link = args[0];
+        window.open(link, '_blank');
+        addToOutput(`Opening link: ${link}`);
+    } else {
+        addToOutput('Usage: open <link>');
+    }
+}
+
+function cowsayMessage(args) {
+    if (args.length > 0) {
+        const message = args.join(' ');
+        const cowMessage = `
+ _______________
+< ${message} >
+ ---------------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+`;
+        addToOutput(cowMessage);
+    } else {
+        addToOutput('Usage: cowsay <message>');
+    }
+}
+
+function playYouTubeAudio(args) {
+    if (args.length === 1) {
+        const videoUrl = args[0];
+        const videoId = getYouTubeVideoId(videoUrl);
+
+        if (videoId) {
+            createYouTubePlayer(videoId);
+        } else {
+            addToOutput('Invalid YouTube video URL');
+        }
+    } else {
+        addToOutput('Usage: play <YouTube video ID or URL>');
+    }
+}
+
+// Function to extract video ID from YouTube URL
+function getYouTubeVideoId(url) {
+    const regExp = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+    const match = url.match(regExp);
+
+    return match && match[4];
+}
+
+// Function to create YouTube player
+function createYouTubePlayer(videoId) {
+    const playerDiv = document.getElementById('youtube-player');
+
+    if (!playerDiv) {
+        addToOutput('Error: YouTube player container not found');
+        return;
+    }
+
+    const iframe = document.createElement('iframe');
+    iframe.width = '500';
+    iframe.height = '281';
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&showinfo=0&autohide=1`;
+
+    playerDiv.innerHTML = '';
+    playerDiv.appendChild(iframe);
+
+    addToOutput(`Now playing from YouTube: ${videoId}`);
+    addToOutput(`Type 'stop' to close the video.`);
+}
+
+
+function closeModal() {
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = ''; // Clear the modal content
+}
+
+
+
+// Function to close the modal
+function closeModal() {
+    const modalContainer = document.getElementById('modal-container');
+    modalContainer.innerHTML = ''; // Clear the modal content
+}
+
+
+
+function displayCmatrix() {
+    const matrixAnimation = `
+*****************************
+*                           *
+*   Welcome to the Matrix!   *
+*                           *
+*****************************
+`;
+    addToOutput(matrixAnimation);
+
+    // Simulate animation frames (you can customize this part based on your preference)
+    const frames = [
+        '  010101 010101 010101',
+        '  101010 101010 101010',
+        '  010101 010101 010101',
+        '  101010 101010 101010',
+    ];
+
+    let frameIndex = 0;
+    const animationInterval = setInterval(() => {
+        addToOutput(frames[frameIndex]);
+        frameIndex = (frameIndex + 1) % frames.length;
+    }, 200); // Adjust the interval based on your preference
+
+    // Stop the animation after a certain time (you can customize this part)
+    setTimeout(() => {
+        clearInterval(animationInterval);
+        addToOutput('Matrix animation stopped.');
+        updatePrompt();
+    }, 5000); // Adjust the duration based on your preference
+}
+
+function openMySite() {
+    const websiteURL = 'https://rolllpng.github.io';
+    window.open(websiteURL, '_blank');
+    addToOutput(`Opening my website: ${websiteURL}`);
+}
+
+function displayFortune() {
+    const fortunes = [
+        "You will have a great day!",
+        "Beware of falling squirrels.",
+        "A journey of a thousand miles begins with a single step.",
+        "Your talents will be recognized and suitably rewarded.",
+        "Don't cry over spilled milk.",
+        // Add more fortunes as needed
+    ];
+
+    const randomIndex = Math.floor(Math.random() * fortunes.length);
+    const randomFortune = fortunes[randomIndex];
+
+    addToOutput(`Fortune: ${randomFortune}`);
+}
+function askMagic8Ball(args) {
+    if (args.length > 0) {
+        const question = args.join(' ');
+
+        const responses = [
+            'It is certain.',
+            'It is decidedly so.',
+            'Without a doubt.',
+            'Yes – definitely.',
+            'You may rely on it.',
+            'As I see it, yes.',
+            'Most likely.',
+            'Outlook good.',
+            'Yes.',
+            'Signs point to yes.',
+            'Reply hazy, try again.',
+            'Ask again later.',
+            'Better not tell you now.',
+            'Cannot predict now.',
+            'Don’t count on it.',
+            'My sources say no.',
+            'Outlook not so good.',
+            'Very doubtful.',
+        ];
+
+        const randomIndex = Math.floor(Math.random() * responses.length);
+        const randomResponse = responses[randomIndex];
+
+        addToOutput(`Question: ${question}\nMagic 8-ball says: ${randomResponse}`);
+    } else {
+        addToOutput('Usage: eightball <question>');
+    }
+}
+
+    function clearTerminal() {
+      outputElement.textContent = '';
+    }
+
+    function displayDate() {
+      addToOutput(new Date().toLocaleString());
+    }
+
+    function listFiles() {
+      const fileNames = Object.keys(files);
+      addToOutput(fileNames.length > 0 ? fileNames.join('  ') : 'No files found.');
+    }
+
+    function printWorkingDirectory() {
+      addToOutput('/home/user');
+    }
+
+    function createFile(args) {
+      if (args.length === 1) {
+        const fileName = args[0];
+        if (!files[fileName]) {
+          files[fileName] = '';
+          addToOutput(`File '${fileName}' created.`);
+        } else {
+          addToOutput(`File '${fileName}' already exists.`);
+        }
+      } else {
+        addToOutput('Usage: touch <filename>');
+      }
+    }
+
+    function editTextFile(args) {
+      if (args.length === 1) {
+        const fileName = args[0];
+        if (files[fileName] !== undefined) {
+          addToOutput(`Opening text editor for '${fileName}'. Type ':wq' to save and exit.`);
+          inputElement.removeEventListener('keydown', handleCommand);
+          inputElement.addEventListener('keydown', handleTextEditCommand);
+          currentEditFile = fileName;
+        } else {
+          addToOutput(`File '${fileName}' not found.`);
+        }
+      } else {
+        addToOutput('Usage: edit <filename>');
+      }
+    }
+
+    function handleTextEditCommand(e) {
+      if (e.key === 'Enter') {
+        const command = inputElement.value.trim();
+        if (command === ':wq') {
+          addToOutput('Changes saved.');
+          inputElement.removeEventListener('keydown', handleTextEditCommand);
+          inputElement.addEventListener('keydown', handleCommand);
+        } else {
+          files[currentEditFile] += command + '\n';
+        }
+        updatePrompt();
+      }
+    }
+
+    function catTextFile(args) {
+      if (args.length === 1) {
+        const fileName = args[0];
+        if (files[fileName] !== undefined) {
+          addToOutput(`Content of file '${fileName}':\n${files[fileName]}`);
+        } else {
+          addToOutput(`File '${fileName}' not found.`);
+        }
+      } else {
+        addToOutput('Usage: cat <filename>');
+      }
+    }
+
+    function removeFile(args) {
+      if (args.length === 1) {
+        const fileName = args[0];
+        if (files[fileName] !== undefined) {
+          delete files[fileName];
+          addToOutput(`File '${fileName}' removed.`);
+        } else {
+          addToOutput(`File '${fileName}' not found.`);
+        }
+      } else {
+        addToOutput('Usage: rm <filename>');
+      }
+    }
+
+    function downloadFile(args) {
+      if (args.length === 1) {
+        const fileName = args[0];
+        if (files[fileName] !== undefined) {
+          const blob = new Blob([files[fileName]], { type: 'text/plain' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        } else {
+          addToOutput(`File '${fileName}' not found.`);
+        }
+      } else {
+        addToOutput('Usage: dlfoc <filename>');
+      }
+    }
+
+    function executeCommand(command) {
+    const [commandName, ...args] = command.split(' ');
+
+    if (commandName.toLowerCase() === 'stop') {
+        hideYouTubeVideo();
+    } else if (commands[commandName]) {
+        commands[commandName].execute(args);
+    } else {
+        addToOutput(`Command not found: ${command}`);
+    }
+
+    updatePrompt();
+}
+
+function hideYouTubeVideo() {
+    const playerDiv = document.getElementById('youtube-player');
+    playerDiv.innerHTML = ''; // Clear the player content
+    addToOutput('YouTube video stopped.');
+}
+
+    let currentEditFile = '';
+
+    function addToOutput(content) {
+    if (content instanceof HTMLElement) {
+        outputElement.appendChild(content);
+    } else {
+        outputElement.innerHTML += `${content}<br>`;
+    }
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+
+    function updatePrompt() {
+      inputElement.value = '';
+      inputElement.focus();
+    }
+
+    function handleCommand(e) {
+    if (e.key === 'Enter') {
+        const command = inputElement.value.trim();
+
+        if (command.toLowerCase() === 'stop' && commands.stop) {
+            commands.stop.execute();
+        } else {
+            addToOutput(`> ${command}`);
+            executeCommand(command);
+        }
+
+        updatePrompt();
+    }
+}
+
+
+    inputElement.addEventListener('keydown', handleCommand);
+
+    // Initial message
+    addToOutput('Type "help" for a list of commands.');
+    updatePrompt();
+  </script>
+</body>
+</html>
