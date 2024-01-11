@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Add some basic styling for the grid */
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(30, 20px);
+      gap: 1px;
+    }
+
+    .cell {
+      width: 20px;
+      height: 20px;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+
+    #controls {
+      margin-top: 20px;
+    }
+  </style>
+  <title>Conway's Game of Life</title>
+</head>
+<body>
+  <div id="grid" class="grid"></div>
+  <div id="controls">
+    <button onclick="togglePlayPause()">Play/Pause</button>
+    Speed:
+    <input type="range" min="100" max="1000" value="500" id="speedRange" oninput="changeSpeed(this.value)">
+    <button onclick="clearAll()">Clear All</button>
+  </div>
+  <script>
+    const rows = 30;
+    const cols = 30;
+    let grid = createEmptyGrid(rows, cols);
+    initializeGrid(grid);
+
+    const gridContainer = document.getElementById('grid');
+    createGridHTML(gridContainer, grid);
+
+    let isPlaying = true;
+    let speed = 500;
+    let intervalId;
+
+    function createEmptyGrid(rows, cols) {
+      return Array.from({ length: rows }, () => Array(cols).fill(false));
+    }
+
+    function initializeGrid(grid) {
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          grid[i][j] = Math.random() < 0.2;
+        }
+      }
+    }
+
+    function createGridHTML(container, grid) {
+      container.innerHTML = '';
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.style.backgroundColor = grid[i][j] ? 'black' : 'white';
+          cell.addEventListener('click', toggleCellState);
+          container.appendChild(cell);
+        }
+      }
+    }
+
+    function toggleCellState(event) {
+      if (isPlaying) return;
+      const row = parseInt(event.target.dataset.row);
+      const col = parseInt(event.target.dataset.col);
+      grid[row][col] = !grid[row][col];
+      event.target.style.backgroundColor = grid[row][col] ? 'black' : 'white';
+    }
+
+    function updateGrid() {
+      if (!isPlaying) return;
+
+      const newGrid = createEmptyGrid(rows, cols);
+
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const neighbors = countNeighbors(grid, i, j);
+          if (grid[i][j]) {
+            newGrid[i][j] = neighbors === 2 || neighbors === 3;
+          } else {
+            newGrid[i][j] = neighbors === 3;
+          }
+        }
+      }
+
+      grid = newGrid;
+      createGridHTML(gridContainer, grid);
+    }
+
+    function countNeighbors(grid, row, col) {
+      const neighbors = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1],           [0, 1],
+        [1, -1], [1, 0], [1, 1]
+      ];
+
+      return neighbors.reduce((count, [i, j]) => {
+        const newRow = row + i;
+        const newCol = col + j;
+
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+          count += grid[newRow][newCol] ? 1 : 0;
+        }
+
+        return count;
+      }, 0);
+    }
+
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+
+      if (isPlaying) {
+        intervalId = setInterval(updateGrid, speed);
+      } else {
+        clearInterval(intervalId);
+      }
+    }
+
+    function changeSpeed(value) {
+      speed = value;
+
+      // If playing, restart the interval with the new speed
+      if (isPlaying) {
+        clearInterval(intervalId);
+        intervalId = setInterval(updateGrid, speed);
+      }
+    }
+
+    function clearAll() {
+      if (isPlaying) return;
+      grid = createEmptyGrid(rows, cols);
+      createGridHTML(gridContainer, grid);
+    }
+  </script>
+</body>
+</html>

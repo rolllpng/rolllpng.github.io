@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab Page</title>
+    <script src="https://kit.fontawesome.com/d89f93068d.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            background-color: #f4f4f4; /* Background color */
+            color: #333; /* Default text color */
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #bookmarks {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 15px;
+            margin: auto;
+            max-width: 800px;
+        }
+
+        .bookmark {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            transition: background-color 0.3s, transform 0.3s, color 0.3s;
+        }
+
+        body.dark-mode .bookmark {
+            background-color: #333;
+            color: white;
+        }
+
+        .bookmark:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: scale(1.05);
+            background-color: #f9f9f9;
+            color: #555; /* Adjust as needed */
+        }
+
+        .bookmark-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bookmark img {
+            max-width: 60px;
+            max-height: 60px;
+            margin-bottom: 5px;
+            border-radius: 50%;
+        }
+
+        .bookmark span {
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        #addBookmarkButton {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        #addBookmarkButton:hover {
+            background-color: #555;
+        }
+
+        #addBookmarkContainer {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            width: 300px;
+            max-width: 80%;
+            text-align: center;
+        }
+
+        #addBookmarkContainer h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        #addBookmarkContainer input[type="url"] {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        #addBookmarkContainer input[type="submit"] {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #addBookmarkContainer input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        #addBookmarkContainer button {
+            padding: 10px;
+            background-color: #ddd;
+            color: #333;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        #addBookmarkContainer button:hover {
+            background-color: #ccc;
+        }
+
+        #darkModeToggle {
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #darkModeToggle:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>New Tab Page</h1>
+        <button id="addBookmarkButton" onclick="openAddBookmark()">Add Bookmark</button>
+        <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </header>
+
+    <div id="bookmarks"></div>
+
+    <div id="addBookmarkContainer">
+        <h2>Add Bookmark</h2>
+        <input type="url" id="urlInput" placeholder="Enter URL">
+        <input type="submit" value="Add Bookmark" onclick="addBookmark()">
+        <button onclick="closeAddBookmark()">Close</button>
+    </div>
+
+    <script>
+        // Load bookmarks from local storage
+        document.addEventListener('DOMContentLoaded', function () {
+            loadBookmarks();
+            checkDarkMode();
+        });
+
+        // Function to add a new bookmark
+        function addBookmark() {
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value;
+
+            if (url) {
+                const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+                bookmarks.push(url);
+                localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+                loadBookmarks();
+                urlInput.value = '';
+                closeAddBookmark();
+            }
+        }
+
+        // Function to load bookmarks from local storage and display them
+        function loadBookmarks() {
+            const bookmarksContainer = document.getElementById('bookmarks');
+            bookmarksContainer.innerHTML = '';
+
+            const bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+            bookmarks.forEach(url => {
+                // Extract site name from the URL
+                const siteName = getSiteName(url);
+
+                const bookmarkDiv = document.createElement('div');
+                bookmarkDiv.classList.add('bookmark');
+
+                const bookmarkLink = document.createElement('a');
+                bookmarkLink.href = url;
+                bookmarkLink.target = '_blank';
+
+                const bookmarkContainer = document.createElement('div');
+                bookmarkContainer.classList.add('bookmark-container');
+
+                const bookmarkImage = document.createElement('img');
+                bookmarkImage.src = `https://www.google.com/s2/favicons?domain=${url}`;
+                bookmarkImage.alt = 'Favicon';
+
+                const bookmarkText = document.createElement('span');
+                bookmarkText.textContent = siteName; // Display site name
+
+                bookmarkContainer.appendChild(bookmarkImage);
+                bookmarkContainer.appendChild(bookmarkText);
+                bookmarkLink.appendChild(bookmarkContainer);
+                bookmarkDiv.appendChild(bookmarkLink);
+
+                bookmarksContainer.appendChild(bookmarkDiv);
+            });
+        }
+
+        // Function to open the add bookmark container
+        function openAddBookmark() {
+            const addBookmarkContainer = document.getElementById('addBookmarkContainer');
+            addBookmarkContainer.style.display = 'block';
+        }
+
+        // Function to close the add bookmark container
+        function closeAddBookmark() {
+            const addBookmarkContainer = document.getElementById('addBookmarkContainer');
+            addBookmarkContainer.style.display = 'none';
+        }
+
+        // Function to toggle between light and dark modes
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentMode = localStorage.getItem('darkMode');
+
+            if (currentMode === 'dark') {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'dark');
+            }
+
+            // Update settings menu style
+            updateSettingsMenuStyle();
+        }
+
+        // Function to check and apply dark mode from local storage
+        function checkDarkMode() {
+            const body = document.body;
+            const currentMode = localStorage.getItem('darkMode');
+
+            if (currentMode === 'dark') {
+                body.classList.add('dark-mode');
+            }
+
+            // Update settings menu style
+            updateSettingsMenuStyle();
+        }
+
+        // Function to update the settings menu style based on dark mode
+        function updateSettingsMenuStyle() {
+            const settingsMenu = document.getElementById('settingsMenu');
+            const body = document.body;
+
+            if (body.classList.contains('dark-mode')) {
+                settingsMenu.classList.add('dark-mode');
+            } else {
+                settingsMenu.classList.remove('dark-mode');
+            }
+        }
+
+        // Function to get the site name from the URL
+        function getSiteName(url) {
+            try {
+                const hostname = new URL(url).hostname;
+                return hostname.startsWith('www.') ? hostname.slice(4) : hostname;
+            } catch (error) {
+                console.error('Error getting site name:', error);
+                return url;
+            }
+        }
+    </script>
+</body>
+</html>
